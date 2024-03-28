@@ -2,25 +2,37 @@ package edu.temple.viewpagerinclasssctivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
 
+    val newButton : Button by lazy {
+        findViewById(R.id.button)
+    }
+
+    private val viewPager: ViewPager2 by lazy {
+        findViewById(R.id.viewPager)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewPager = findViewById<ViewPager2>(R.id.viewPager2)
-        viewPager.adapter = object: FragmentStateAdapter(this){
-            override fun getItemCount(): Int {
-                return 10
-            }
+        var fragNum = 1
 
-            override fun createFragment(position: Int): Fragment {
-                return TextFragment.newInstance(position.toString())
-            }
+        viewPager.adapter = object: FragmentStateAdapter(this) {
+            override fun getItemCount() = fragNum
+
+            override fun createFragment(position: Int) = TextFragment.newInstance((position + 1).toString())
+
+        }
+        newButton.setOnClickListener{
+            fragNum++
+            (viewPager.adapter as FragmentStateAdapter).notifyDataSetChanged()
+            viewPager.setCurrentItem(fragNum, true)
         }
 
     }
